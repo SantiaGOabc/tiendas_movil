@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8f9a6f362028acf34932457dbb5866cb {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_8f9a6f362028acf34932457dbb5866cb" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8f9a6f362028acf34932457dbb5866cb = L.map(
+                "map_8f9a6f362028acf34932457dbb5866cb",
+                {
+                    center: [-17.3935, -66.157],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 15,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_6cf89cd4ca310148cc02e8f40e1fc4ac = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_6cf89cd4ca310148cc02e8f40e1fc4ac.addTo(map_8f9a6f362028acf34932457dbb5866cb);
+        
+    
+            var marker_910a2e9abd76ea79aedab9a56826833a = L.marker(
+                [-17.3935, -66.157],
+                {}
+            ).addTo(map_8f9a6f362028acf34932457dbb5866cb);
+        
+    
+        var popup_78265a5f2702c2ce37e28f47ee1ea64a = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_073e9f3c31751b7f4f22d35536ace562 = $(`<div id="html_073e9f3c31751b7f4f22d35536ace562" style="width: 100.0%; height: 100.0%;"><table border=1 class="table table-success table-striped">         <tr><td colspan="2"><img src='/static/tienda_barrio.jpg' width='250' height='200'></td></tr>         <tr><td>Tienda:</td><td>Doña Filomena</td></tr>         <tr><td>Contacto:</td><td>Filomena Delgado</td></tr>         <tr><td>Dirección:</td><td>calle La Tablada # 4533</td></tr>         <tr><td>Fecha:</td><td>10 Agosto 2024</td></tr>         <tr><td colspan="2"><center><a class="btn btn-primary" href=/pedido style="color: white;">Hacer Pedido</a></center></td></tr>         </table></div>`)[0];
+                popup_78265a5f2702c2ce37e28f47ee1ea64a.setContent(html_073e9f3c31751b7f4f22d35536ace562);
+            
+        
+
+        marker_910a2e9abd76ea79aedab9a56826833a.bindPopup(popup_78265a5f2702c2ce37e28f47ee1ea64a)
+        ;
+
+        
+    
+    
+            marker_910a2e9abd76ea79aedab9a56826833a.bindTooltip(
+                `<div>
+                     Haz click para más información
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

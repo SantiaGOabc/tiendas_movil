@@ -1,0 +1,150 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+body{
+    background: linear-gradient(
+        90deg,
+        rgba(166,93,234,1)25%,
+        rgba(207,103,235,1)73%
+    );
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.container{
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.fondo{
+    padding: 32px 0;
+    background-color: #2A394F;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+.logo{
+    font-size: 24px;
+    color: aqua;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.menu .navbar ul li{
+    position: relative;
+    float: left;
+}
+.menu .navbar ul li a {
+    font-size: 18px;
+    padding: 20px;
+    color: #FFFFFF;
+    display: block;
+}
+.menu .navbar ul li a:hover {
+   color: gray;
+}
+
+#menu{
+    display: none;
+}
+.menu-icono{
+    width: 25px ;
+}
+.menu label{
+    cursor: pointer;
+    display: none;
+}
+
+@media(max-width:991px){
+    .menu{
+        padding: 30px;
+    }
+    .menu label{
+        display: initial;
+    }
+    .fondo{
+        padding: 40px 0;
+    }
+    .menu .navbar{
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #2A394F;
+        display: none;
+        justify-content: flex-start;
+    }
+
+    .menu .navbar ul li{
+        width: 100%;
+    }
+    
+    #menu:checked ~ .navbar{
+        display: initial;
+    };
+
+    .menu-vertical {
+        position: absolute;
+        display: none;
+        top:100%;
+        left:0;
+        width: 200px;
+        background-color: #2A394F;
+        z-index: 1;
+        min-width: 200px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 0;
+        border-radius: 4px;
+    }
+    
+    .menu .navbar ul li:hover > .menu-vertical {
+        display: block;
+    }
+    .menu-vertical li{
+        width: 100%;
+    };
+    .menu-vertical li a{
+        display: block;
+        padding: 10px 20px;
+        color: #FFFFFF;
+        background-color: #2A394F;
+    };
+    .menu-vertical li a:hover {
+        background-color: aquamarine;
+        color: #000000;
+    }
+
+
+}
+
+.menu-vertical{
+    position: absolute;
+    display: none;
+    width: 200px;
+    background-color: #2A394F;
+}
+.menu .navbar ul li:hover .menu-vertical {
+    display: block;
+ }
+.menu-vertical li:hover{
+    background-color: black;
+}
+
+.menu-vertical li a{
+    display: block;
+    color: #FFFFFF;
+    padding: 15px 15px 15px 20px ;
+}

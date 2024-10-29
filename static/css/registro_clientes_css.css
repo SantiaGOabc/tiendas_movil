@@ -1,0 +1,124 @@
+
+/* Fondo degradado animado para el body */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(
+        90deg,
+        rgba(166,93,234,1)25%,
+        rgba(207,103,235,1)73%
+    );
+    background-size: 300% 300%;
+    animation: gradientShift 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0; /* Asegura que no haya padding afectando el header */
+    min-height: 100vh; /* Asegura que ocupe al menos la altura de la ventana */
+    overflow-y: auto; /* Permite el desplazamiento vertical */
+    display: block;
+}
+
+/* Animación del fondo */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Contenedor del formulario */
+.container {
+    background-color: rgba(255, 255, 255, 0.95); /* Fondo ligeramente transparente */
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 100%;
+    border: none;
+    margin-top: 20px; /* Ajustado para dejar espacio debajo del header */
+    animation: fadeIn 1.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Efecto de entrada suave */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para el título */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #E60000; /* Rojo principal del logo */
+}
+
+/* Grupo de formulario */
+.form_group {
+    margin-bottom: 15px;
+}
+
+.form_group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form_group input[type="text"],
+.form_group input[type="number"],
+.form_group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto de hover en los campos */
+.form_group input[type="text"]:hover,
+.form_group input[type="number"]:hover,
+.form_group input[type="file"]:hover {
+    border-color: #006400; /* Verde al pasar el cursor */
+    box-shadow: 0 0 8px rgba(0, 100, 0, 0.2); /* Sombra suave */
+}
+
+/* Vista previa de la imagen */
+#imagePreview {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    display: none; /* Oculto hasta que haya una imagen */
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Botón de envío */
+button[type="submit"] {
+    background-color: #E60000; /* Fondo rojo */
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    transition: transform 0.1s ease, background-color 0.3s ease;
+}
+
+/* Efecto de hover y click en el botón */
+button[type="submit"]:hover {
+    background-color: #cc0000; /* Rojo más oscuro */
+}
+
+button[type="submit"]:active {
+    transform: scale(0.97); /* Efecto de presión */
+}

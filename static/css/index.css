@@ -1,0 +1,10 @@
+body{
+    background: #efe1d1;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.container{
+    max-width: 1100px;
+    background: #78ffef;
+    margin: 0 auto;
+}
