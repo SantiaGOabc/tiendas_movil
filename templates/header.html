@@ -28,20 +28,30 @@
                     </ul>
                 </li>
                 {% if 'usuario' in session %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('ver_mapa') }}">MAPA</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('registro_pedido') }}">REGISTRAR PEDIDO</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('registro_productos') }}">REGISTRAR PRODUCTO</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('registro_clientes') }}">REGISTRAR CLIENTE</a>
-                </li>
-                {% endif %}
+                    {% if g.rol.nombre == 'administrador' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('registrar_usuario') }}">REGISTRAR USUARIO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('registro_productos') }}">REGISTRAR PRODUCTO</a>
+                        </li
+                    {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('ver_mapa') }}">MAPA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('registro_pedido') }}">REGISTRAR PEDIDO</a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('registro_clientes') }}">REGISTRAR CLIENTE</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <span class="nav-link">Rol: {{ g.rol.nombre if g.rol else 'Sin rol asignado' }}</span>
+                        </li>
+
+                {% endif %}
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">

@@ -1,22 +1,124 @@
-from flask import Flask, render_template, url_for, request, redirect, session, flash
+from flask import g, Flask, render_template, request, jsonify, session, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
 import folium
+import mysql.connector
 import os
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
 
+app.config['DEBUG'] = True
+
+
+try:
+    connection = mysql.connector.connect(
+        host='pythondevelop.mysql.pythonanywhere-services.com',
+        user='pythondevelop',
+        password='basededatos',
+        database='pythondevelop$tiendas_movil'
+    )
+    print("Conexión exitosa a la base de datos")
+except mysql.connector.Error as err:
+    print(f"Error: {err}")
+finally:
+    if connection.is_connected():
+        connection.close()
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://pythondevelop:basededatos@pythondevelop.mysql.pythonanywhere-services.com/pythondevelop$tiendas_movil'
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'glugluglu'
 
-usuarios = {
-    "usuario1": {"correo": "usuario1", "clave": "123", "rol": "vendedor"},
-    "usuario2": {"correo": "usuario2", "clave": "456", "rol": "vendedor"},
-    "usuario3": {"correo": "usuario3", "clave": "789", "rol": "gerente"}
-}
+db = SQLAlchemy(app)
+
+#PRUEBAS DE BASE DE DATOS:
+class Rol(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+
+class Usuario(db.Model):
+    __tablename__ = 'usuarios'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100))
+    usuario = db.Column(db.String(100), nullable=False)
+    correo = db.Column(db.String(100), nullable=False, unique=True)
+    clave = db.Column(db.String(255), nullable=False)
+    rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    rol = db.relationship('Rol', backref=db.backref('usuarios', lazy=True))
+
+    def set_password(self, password):
+        self.clave = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.clave, password)
+
+@app.after_request
+def after_request(response):
+    if hasattr(g, 'db_session'):
+        g.db_session.remove()
+    return response
+
+@app.before_first_request
+def crear_tablas():
+    db.create_all()
+
+@app.before_request
+def before_request():
+    if 'usuario' in session:
+        g.usuario = Usuario.query.get(session['usuario'])
+        if g.usuario:
+            g.rol = Rol.query.get(g.usuario.rol_id)
+
+@app.route('/registrar_usuario', methods=['GET', 'POST'])
+def registrar_usuario():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        usuario = request.form['usuario']
+        correo = request.form['correo']
+        clave = request.form['clave']
+        rol_id = request.form['rol']
+
+        clave_encriptada = generate_password_hash(clave)
+
+        try:
+            nuevo_usuario = Usuario(nombre=nombre, usuario = usuario,correo=correo, clave=clave_encriptada, rol_id=rol_id)
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            flash('Usuario registrado correctamente', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Ocurrió un error: {str(e)}', 'danger')
+            return redirect(url_for('registrar_usuario'))
+
+    return render_template('registrar_usuario.html')
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        correo = request.form['correo']
+        clave = request.form['clave']
+
+        usuario = Usuario.query.filter_by(correo=correo).first()
+
+        if usuario and check_password_hash(usuario.clave, clave):
+            session['usuario'] = usuario.id
+            session['rol_id'] = usuario.rol_id
+            flash('Inicio de sesión exitoso')
+            return redirect(url_for('home'))
+        else:
+            flash('Usuario o contraseña incorrectos')
+
+    return render_template('login.html')
+
+#CODIGO NORMAL:
 @app.route('/uploads', methods=['POST'])
 def upload_file():
     try:
@@ -33,7 +135,22 @@ def upload_file():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
+    # Obtener el usuario de la sesión
+    usuario = Usuario.query.get(session['usuario'])
+    if usuario:  # Asegurarse de que el usuario existe
+        rol = Rol.query.get(usuario.rol_id)
+        return render_template('index.html', rol=rol)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/listar')
+def listar():
+    usuarios = Usuario.query.all()
+    return render_template('listar.html', usuarios=usuarios)
 
 @app.route('/registro_clientes')
 def registro_clientes():
@@ -47,75 +164,33 @@ def registro_pedido():
 def registro_productos():
     return render_template('registrar_productos.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    try:
-        if request.method == 'POST':
-            correo = request.form['correo']
-            clave = request.form['clave']
-
-            for usuario, datos in usuarios.items():
-                if datos['correo'] == correo and datos['clave'] == clave:
-                    session['usuario'] = usuario
-                    return redirect(url_for('home'))
-
-            flash('Usuario o  contraseña incorrectas')
-    except Exception as e:
-        flash(f'Ocurrió un error: {str(e)}')
-
-    return render_template('login.html')
-
 @app.route('/logout')
 def logout():
     session.pop('usuario', None)
     return redirect(url_for('home'))
+
 @app.route('/ver_mapa')
 def ver_mapa():
-    if 'usuario' not in session:
-        return redirect(url_for('login'))
-
+    # Generar el mapa centrado en una ubicación predeterminada
     m = folium.Map(location=[-17.3935, -66.1570], zoom_start=15)
 
-    # TIENDA1
-    tienda1 = {
-        'nombre': 'Doña Filomena',
-        'contacto': 'Filomena Delgado',
-        'direccion': 'calle La Tablada # 4533',
-        'fecha': '10 Agosto 2024',
-        'foto': 'tienda_barrio.jpg',
-        'ubicacion': [-17.3935, -66.1570]
-    }
+    # Añadir puntos de tiendas como en tu código original
+    tiendas = [
+        {"nombre": "Doña Filomena", "ubicacion": [-17.3935, -66.1570], "contacto": "Filomena Delgado", "direccion": "calle La Tablada # 4533", "fecha": "10 Agosto 2024", "foto": "tienda_barrio.jpg"},
+        {"nombre": "QR_Market", "ubicacion": [-17.373305, -66.158999], "contacto": "Juan Pérez", "direccion": "Av. Gualberto Villaroel", "fecha": "12 Septiembre 2024", "foto": "QR_Market.jpg"},
+        {"nombre": "ECO_Pura", "ubicacion": [-17.374859, -66.160026], "contacto": "Maria Rosa", "direccion": "Calle La Tablada", "fecha": "12 Septiembre 2024", "foto": "tienda_barrio.jpg"}
+    ]
 
-    # TIENDA2
-    tienda2 = {
-        'nombre': 'QR_Market',
-        'contacto': 'Juan Pérez',
-        'direccion': 'Av. Gualberto Villaroel',
-        'fecha': '12 Septiembre 2024',
-        'foto': 'QR_Market.jpg',
-        'ubicacion': [-17.373305, -66.158999]
-    }
-
-    # TIENDA3
-    tienda3 = {
-        'nombre': 'ECO_Pura',
-        'contacto': 'Maria Rosa',
-        'direccion': 'Calle La Tablada',
-        'fecha': '12 Septiembre 2024',
-        'foto': 'tienda_barrio.jpg',
-        'ubicacion': [-17.374859, -66.160026]
-    }
-
-    def agregar_tienda(tienda):
+    for tienda in tiendas:
         foto_url = url_for('static', filename=tienda['foto'])
-        htmlcode = f"""<table border=1 class="table table-success table-striped">
+        htmlcode = f"""
+        <table border=1 class="table table-success table-striped">
             <tr><td colspan="2"><img src='{foto_url}' width='250' height='200'></td></tr>
             <tr><td>Tienda:</td><td>{tienda['nombre']}</td></tr>
             <tr><td>Contacto:</td><td>{tienda['contacto']}</td></tr>
             <tr><td>Dirección:</td><td>{tienda['direccion']}</td></tr>
             <tr><td>Fecha:</td><td>{tienda['fecha']}</td></tr>
-            <tr><td colspan="2"><center><a class="btn btn-primary" href={url_for('pedido')} style="color: white;">Hacer Pedido</a></center></td></tr>
-            </table>"""
+        </table>"""
 
         folium.Marker(
             location=tienda['ubicacion'],
@@ -123,12 +198,9 @@ def ver_mapa():
             tooltip='Haz click para más información'
         ).add_to(m)
 
-    agregar_tienda(tienda1)
-    agregar_tienda(tienda2)
-    agregar_tienda(tienda3)
-
     mapa_html = m._repr_html_()
     return render_template('mapa.html', mapa=mapa_html)
+
 
 @app.route('/pedido')
 def pedido():

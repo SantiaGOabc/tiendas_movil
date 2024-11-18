@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block contenido %}
+
+    <div class="container">
+        <div class="header text-center">
+            <h3>Reporte de Ventas</h3>
+        </div>
+        
+        <div class="buttons mt-3 text-center">
+            <button class="btn btn-primary"><a href="/download-pdf" style="color:white;">Descargar PDF</a></button>
+            <!--button class="btn btn-info" onclick="window.print()">Imprimir</button-->
+        </div>
+
+        <div class="pdf-container mt-4">
+            <object
+                data="/static/reporte.pdf"
+                type="application/pdf"
+                width="100%"
+                height="1000px">
+                <p>Tu navegador no puede mostrar PDFs directamente. 
+                   <a href="/download-pdf">Haz clic aquí para descargar el PDF</a>
+                </p>
+            </object>
+        </div>
+              
+    </div>
+
+{% endblock %}
