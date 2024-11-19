@@ -148,13 +148,17 @@ def home():
 
 
 @app.route('/listar')
-def listar():
+def listar_usuario():
     usuarios = Usuario.query.all()
     return render_template('listar.html', usuarios=usuarios)
 
 @app.route('/registro_clientes')
 def registro_clientes():
     return render_template('registro_clientes.html')
+
+@app.route('/listar_producto')
+def listar_producto():
+    return render_template('listado_productos.html')
 
 @app.route('/registro_pedido')
 def registro_pedido():
