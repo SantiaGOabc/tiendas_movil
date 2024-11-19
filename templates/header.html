@@ -9,21 +9,41 @@
 
                 {% if 'usuario' in session %}
                     {% if g.rol.nombre == 'administrador' %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('registrar_usuario') }}">REGISTRAR USUARIO</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('listar_usuario') }}">LISTAR USUARIO</a>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                USUARIO
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="productoDropdown">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('registrar_usuario') }}">REGISTRAR USUARIO</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('listar_usuario') }}">LISTAR USUARIO</a>
+                                </li>
+                            </ul>
                         </li>
 
-                        </li>
                     {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('ver_mapa') }}">MAPA</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('registro_pedido') }}">REGISTRAR PEDIDO</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                PEDIDOS
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="productoDropdown">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('registro_pedido') }}">REGISTRAR PEDIDOS</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url_for('listar_pedido') }}">LISTAR PEDIDOS</a>
+                                </li>
+                            </ul>
                         </li>
+
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('registro_clientes') }}">REGISTRAR CLIENTE</a>
@@ -38,7 +58,7 @@
                                     <a class="nav-link" href="{{ url_for('registro_productos') }}">REGISTRAR PRODUCTO</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url_for('listar_producto') }}">LISTAR PRODUCTO</a>
+                                    <a class="nav-link" href="{{ url_for('listar_productos') }}">LISTAR PRODUCTO</a>
                             </ul>
                         </li>
 
